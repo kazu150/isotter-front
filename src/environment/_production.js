@@ -1,5 +1,5 @@
 const config = {
-    API_ORIGIN: '/'
+    API_ORIGIN: 'https://isotter-back.herokuapp.com/'
 }
 
 module.exports = config;
