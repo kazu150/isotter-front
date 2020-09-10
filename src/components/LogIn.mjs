@@ -1,6 +1,6 @@
 import React from 'react';
-import FormEdit from './FormEdit';
-import history from '../history';
+import FormEdit from './FormEdit.mjs';
+import history from '../history.mjs';
 
 class LogIn extends React.Component {
 

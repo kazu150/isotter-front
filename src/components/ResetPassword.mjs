@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
-import FormEdit from './FormEdit';
-import history from '../history';
+import FormEdit from './FormEdit.mjs';
+import history from '../history.mjs';
 
 class ResetPassword extends React.Component {
 

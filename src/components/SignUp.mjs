@@ -1,6 +1,6 @@
 import React from 'react';
-import history from '../history';
-import FormEdit from './FormEdit'
+import history from '../history.mjs';
+import FormEdit from './FormEdit.mjs'
 
 class SignUp extends React.Component {
 

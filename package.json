@@ -15,7 +15,6 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.3"
   },
-  "type": "module",
   "scripts": {
     "start:dev": "NODE_ENV=development react-scripts start",
     "start": "NODE_ENV=production react-scripts start",

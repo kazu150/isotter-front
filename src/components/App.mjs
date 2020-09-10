@@ -1,16 +1,16 @@
 import React from 'react';
 import { Router, Route } from 'react-router-dom';
-import Header from './Header';
-import Timeline from './Timeline';
-import PostEdit from './PostEdit';
-import Profile from './Profile';
-import ProfileEdit from './ProfileEdit';
-import LogIn from './LogIn';
-import ForgotPassword from './ForgotPassword';
-import ResetPassword from './ResetPassword';
-import SignUp from './SignUp'; 
-import ErrorHandler from './ErrorHandler';
-import history from '../history';
+import Header from './Header.mjs';
+import Timeline from './Timeline.mjs';
+import PostEdit from './PostEdit.mjs';
+import Profile from './Profile.mjs';
+import ProfileEdit from './ProfileEdit.mjs';
+import LogIn from './LogIn.mjs';
+import ForgotPassword from './ForgotPassword.mjs';
+import ResetPassword from './ResetPassword.mjs';
+import SignUp from './SignUp.mjs'; 
+import ErrorHandler from './ErrorHandler.mjs';
+import history from '../history.mjs';
 import env from '../environment';
 
 class App extends React.Component {

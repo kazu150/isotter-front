@@ -1,6 +1,6 @@
 import React from 'react';
 import faker from 'faker';
-import Card from './Card';
+import Card from './Card.mjs';
 
 class Timeline extends React.Component {
 
