@@ -1,6 +1,6 @@
 import React from 'react';
-import FormEdit from './FormEdit.mjs';
-import history from '../history.mjs';
+import FormEdit from './FormEdit.js';
+import history from '../history.js';
 
 class ProfileEdit extends React.Component {
 

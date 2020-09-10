@@ -1,1 +1,1 @@
-web: node ./src/components/App.mjs
+web: node ./src/components/App.js

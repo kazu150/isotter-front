@@ -1,5 +1,5 @@
 import React from 'react';
-import history from '../history.mjs';
+import history from '../history.js';
 
 class PostEdit extends React.Component {
     state={ post: '' }; 
