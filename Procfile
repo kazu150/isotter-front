@@ -1,1 +1,1 @@
-web: node ./src/components/App.js
+web: npm start
