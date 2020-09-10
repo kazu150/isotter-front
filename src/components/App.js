@@ -67,7 +67,8 @@ class App extends React.Component {
         })
         .then(resData => {
             resData.posts.map(post => {
-                post.userId.thumb = `${env.API_ORIGIN}${post.userId.thumb}`
+                post.userId.thumb = env.API_ORIGIN + post.userId.thumb;
+                return post;
             })
 
             // 昇順降順の調整（https://qiita.com/PianoScoreJP/items/f0ff7345229871039672）
