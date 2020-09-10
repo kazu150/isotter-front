@@ -1,5 +1,4 @@
 import React from 'react';
-import history from '../history.js';
 import FormEdit from './FormEdit.js'
 
 class SignUp extends React.Component {

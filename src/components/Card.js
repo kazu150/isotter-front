@@ -3,33 +3,33 @@ import React from 'react';
 const Card = props => {
     return(
         <div className="comment">
-            <a className="avatar">
+            <a href="/#" className="avatar">
                 <img src={props.thumbnail} alt={`avator of ${props.userName}`} />
             </a>
             <div className="content">
-                <a onClick={() => props.onClickAuthorName(props.userName)} className="author">{props.userName}</a>
+                <a href="/#" onClick={() => props.onClickAuthorName(props.userName)} className="author">{props.userName}</a>
                 <div className="text">{props.content}</div>
                 <div className="actions">
-                    <a className="reply">
+                    <a href="/#" className="reply">
                         <i className="reply icon"></i>
                         Reply
                     </a>
-                    <a className="update">
+                    <a href="/#" className="update">
                         <i className="edit icon"></i>
                         Update
                     </a>
                     {
                         props.currentUserName === props.userName ?
-                        <a className="save" onClick={props.onDeleteClick}>
+                        <a href="/#" className="save" onClick={props.onDeleteClick}>
                             <i className="trash icon"></i>
                             Delete
                         </a> :
-                        <a className="save" style={{'visibility': 'hidden'}}>
+                        <a href="/#" className="save" style={{'visibility': 'hidden'}}>
                             <i className="trash icon"></i>
                             Delete
                         </a> 
                     }
-                    <a>
+                    <a href="/#">
                         <i className="clock icon"></i>
                         {props.time}
                     </a>

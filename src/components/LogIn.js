@@ -62,6 +62,7 @@ class LogIn extends React.Component {
                         marginTop: '15px', 
                         cursor: 'pointer'
                     }}
+                    href="/#"
                 >
                     Forgot password?
                 </a>

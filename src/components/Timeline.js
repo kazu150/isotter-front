@@ -1,5 +1,4 @@
 import React from 'react';
-import faker from 'faker';
 import Card from './Card.js';
 
 class Timeline extends React.Component {
