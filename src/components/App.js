@@ -149,7 +149,7 @@ class App extends React.Component {
         })
     }
 
-    onDeleteClick = postId => {
+    onDeleteClick = (e, postId) => {
         const method = 'DELETE';
 
         fetch(env.API_ORIGIN + 'timeline/post',{
