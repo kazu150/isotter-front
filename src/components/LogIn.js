@@ -55,17 +55,16 @@ class LogIn extends React.Component {
                 <button type="submit" className="ui submit button">
                     Submit
                 </button>
-                <a 
+                <button 
                     onClick={this.onForgotClick} 
                     style={{
                         display: 'block', 
                         marginTop: '15px', 
                         cursor: 'pointer'
                     }}
-                    href="/#"
                 >
                     Forgot password?
-                </a>
+                </button>
             </form>
         );
     }

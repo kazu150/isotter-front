@@ -3,33 +3,33 @@ import React from 'react';
 const Card = props => {
     return(
         <div className="comment">
-            <a href="/#" className="avatar">
+            <a href="/#" onClick={e => e.preventDefault()} className="avatar">
                 <img src={props.thumbnail} alt={`avator of ${props.userName}`} />
             </a>
             <div className="content">
-                <a href="/#" onClick={() => props.onClickAuthorName(props.userName)} className="author">{props.userName}</a>
+                <a href="/#" onClick={(e) => props.onClickAuthorName(e, props.userName)} className="author">{props.userName}</a>
                 <div className="text">{props.content}</div>
                 <div className="actions">
-                    <a href="/#" className="reply">
+                    <a href="/#" onClick={e => e.preventDefault()} className="reply">
                         <i className="reply icon"></i>
                         Reply
                     </a>
-                    <a href="/#" className="update">
+                    <a href="/#" onClick={e => e.preventDefault()} className="update">
                         <i className="edit icon"></i>
                         Update
                     </a>
                     {
                         props.currentUserName === props.userName ?
-                        <a href="/#" className="save" onClick={props.onDeleteClick}>
+                        <a href="/#" className="save" onClick={e => props.onDeleteClick(e)}>
                             <i className="trash icon"></i>
                             Delete
                         </a> :
-                        <a href="/#" className="save" style={{'visibility': 'hidden'}}>
+                        <a href="/#" onClick={e => e.preventDefault()} className="save" style={{'visibility': 'hidden'}}>
                             <i className="trash icon"></i>
                             Delete
                         </a> 
                     }
-                    <a href="/#">
+                    <a href="/#" onClick={e => e.preventDefault()}>
                         <i className="clock icon"></i>
                         {props.time}
                     </a>

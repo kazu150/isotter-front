@@ -11,10 +11,10 @@ class Timeline extends React.Component {
                     key={post._id}
                     thumbnail={post.userId.thumb} 
                     userName={post.userId.userName} 
-                    onClickAuthorName={(userName) => this.props.onClickAuthorName(userName)}
+                    onClickAuthorName={(e, userName) => this.props.onClickAuthorName(e, userName)}
                     content={post.content}
                     time={post.createdAt}
-                    onDeleteClick={ () => this.props.onDeleteClick(post._id) }
+                    onDeleteClick={ (e) => this.props.onDeleteClick(e, post._id) }
                 />
             )
         })

@@ -189,7 +189,8 @@ class App extends React.Component {
         })
     }
 
-    onClickAuthorName = userName => {
+    onClickAuthorName = (e, userName) => {
+        e.preventDefault();
         this.getUser(userName);
         history.push(`/profile/${userName}`);
     }
