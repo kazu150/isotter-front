@@ -199,17 +199,15 @@ class App extends React.Component {
         this.getUser(this.state.currentUser.userName)
     }
 
-    onRenderEditPage = (user, userName) => {
+    onRenderEditPage = ( userName) => {
 
-        this.setState({
-            selectedUser: user
-        })
         history.push(`/profile/${userName}/edit`);
 
     }
 
 
     getUser = (userName) => {
+        
         const method = 'GET';
 
         fetch(env.API_ORIGIN + 'admin/userStatus/' + userName, {
@@ -229,7 +227,6 @@ class App extends React.Component {
         .then(resData => {
             resData.user[0].password = '';
             resData.user[0].passwordConfirm = '';
-            console.log(this.state.selectedUser);
             if(!resData.user[0].fruit ){
                 resData.user[0].fruit = '';
             }

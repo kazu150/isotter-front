@@ -25,7 +25,7 @@ class Profile extends React.Component {
 
     onEditClick = (e) => {
         e.preventDefault();
-        this.props.onRenderEditPage(this.state.user, this.props.match.params.userName);
+        this.props.onRenderEditPage(this.props.match.params.userName);
     }
 
     render(){

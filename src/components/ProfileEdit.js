@@ -4,16 +4,21 @@ import FormEdit from './FormEdit.js';
 class ProfileEdit extends React.Component {
 
     state = {
-        user: {...this.props.selectedUser},
-        oldUser: {...this.props.selectedUser},
+        user: {},
+        oldUser: {},
         pwConfirm: '',
         fruit: '',
         err: ''
     }
 
-    componentDidMount =  () => {
-        this.props.getUser(this.props.match.params.userName)
+    componentDidMount = async () => {
+        await this.props.getUser(this.props.match.params.userName);
+        this.setState({
+            user: {...this.props.selectedUser},
+            oldUser: {...this.props.selectedUser}
+        })
     }
+
 
     onUpdateSubmit = (e) => {
         e.preventDefault();
@@ -92,6 +97,7 @@ class ProfileEdit extends React.Component {
                 <button type="submit" className='ui submit button red'>Update</button>
             </form>
         );
+
     }
 }
 
