@@ -1,5 +1,7 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { Router, Route } from 'react-router-dom';
+import { setUser, showAllTweets } from '../actions'
 import Header from './Header.js';
 import Timeline from './Timeline.js';
 import PostEdit from './PostEdit.js';
@@ -17,7 +19,6 @@ class App extends React.Component {
     state = { 
         posts: [],
         post: {},
-        isAuth: false,
         currentUser: {},
         selectedUser: {},
         err: '',
@@ -36,63 +37,16 @@ class App extends React.Component {
         if(new Date(expiryDate) <= new Date()){
             this.logoutHandler()
         } else if(token) {
-            this.setState({
-                currentUser: {
-                    userName: userName,
-                    _id: userId
-                },
-                token: token,
-                isAuth: true
-            })
+            this.props.setUser(userName, userId, token);
             const remainingMilliseconds = new Date(expiryDate).getTime() - new Date().getTime();
             this.setAutoLogout(remainingMilliseconds);
         }
-        this.renderPosts();
+        this.props.showAllTweets();
 
-    }
-
-    renderPosts = () => {
-        fetch(env.API_ORIGIN + 'timeline/posts',{
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-        .then(res => {
-            if(res.status!== 200 && res.status !== 201){
-                const error = new Error('サーバー側のなにかのエラー') 
-                error.status = res.status;
-                throw error;
-            }
-            return res.json();
-        })
-        .then(resData => {
-            resData.posts.map(post => {
-                post.userId.thumb = env.API_ORIGIN + post.userId.thumb;
-                return post;
-            })
-
-            // 昇順降順の調整（https://qiita.com/PianoScoreJP/items/f0ff7345229871039672）
-            const posts = resData.posts.sort(function(a,b){
-                if(a._id>b._id) return -1;
-                if(a._id < b._id) return 1;
-                return 0;
-            });
-            this.setState({posts: posts})
-
-        })
-        .catch(err => {
-            this.setState({
-                err: {
-                    status: err.status,
-                    message: err.message
-                }
-            })
-        })
     }
 
     logoutHandler = () => {
         this.setState({
-            isAuth: false,
             currentUser: {},
             token: ''
         })
@@ -100,209 +54,6 @@ class App extends React.Component {
         localStorage.removeItem('userId');
         localStorage.removeItem('userName');
         localStorage.removeItem('expiryDate');
-    }
-
-    onPostSubmit = post => {
-
-        if(!post){
-            this.setState({
-                err: {
-                    status: 422,
-                    message: `入力形式が不正`
-                }
-            })
-            return;
-        }
-
-        const method = 'POST';
-        fetch(env.API_ORIGIN + 'timeline/post', {
-            method: method,
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + this.state.token
-            },
-            body: JSON.stringify({
-                userId: this.state.currentUser._id,
-                content: post,
-                
-            })
-        })
-        .then(res => {
-            if(res.status!== 200 && res.status !== 201){
-                const error = new Error('サーバー側のなにかのエラー') 
-                error.status = res.status;
-                throw error;
-            }
-            return res.json()
-        })
-        .then(resData => {
-            this.renderPosts();
-            history.push('/');
-        })
-        .catch(err => {
-            this.setState({
-                err: {
-                    status: err.status,
-                    message: err.message
-                }
-            })
-        })
-    }
-
-    onDeleteClick = (e, postId) => {
-        const method = 'DELETE';
-
-        fetch(env.API_ORIGIN + 'timeline/post',{
-            method: method,
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + this.state.token
-            },
-            body: JSON.stringify({
-                postId: postId
-            })
-        })
-        .then(res => {
-            if(res.status!== 200 && res.status !== 201){
-                const error = new Error('サーバー側のなにかのエラー') 
-                error.status = res.status;
-                throw error;
-            }
-            return res.json()
-        })
-        .then(resData => {
-            let posts = this.state.posts;
-            posts = posts.filter((obj) => {
-                return obj._id !== resData.deletedPost._id;
-            });
-            this.setState({
-                posts: posts
-            });
-        })
-        .catch(err => {
-            this.setState({
-                err: {
-                    status: err.status,
-                    message: err.message
-                }
-            })
-        })
-    }
-
-    onClickAuthorName = (e, userName) => {
-        e.preventDefault();
-        this.getUser(userName);
-        history.push(`/profile/${userName}`);
-    }
-    
-    onProfileButtonClick = () => {
-        this.getUser(this.state.currentUser.userName)
-    }
-
-    onRenderEditPage = ( userName) => {
-
-        history.push(`/profile/${userName}/edit`);
-
-    }
-
-
-    getUser = (userName) => {
-        
-        const method = 'GET';
-
-        fetch(env.API_ORIGIN + 'admin/userStatus/' + userName, {
-            method: method,
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-        .then(res => {
-            if(res.status!== 200 && res.status !== 201){
-                const error = new Error('サーバー側のなにかのエラー') 
-                error.status = res.status;
-                throw error;
-            }
-            return res.json();
-        })
-        .then(resData => {
-            resData.user[0].password = '';
-            resData.user[0].passwordConfirm = '';
-            if(!resData.user[0].fruit ){
-                resData.user[0].fruit = '';
-            }
-            resData.user[0].thumb = env.API_ORIGIN + resData.user[0].thumb
-            this.setState({
-                selectedUser: resData.user[0]
-            })
-        })
-        .catch(err => {
-            this.setState({
-                err: {
-                    status: err.status,
-                    message: err.message
-                }
-            })
-        })
-    }
-
-    onLoginSubmit = (userName, password) => {
-        const method = 'POST'
-
-        fetch(env.API_ORIGIN + 'admin/login', {
-            method: method,
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                userName: userName,
-                password: password
-            })
-        })
-        .then(res => {
-            if(res.status === 404){
-                const error = new Error('ユーザーがいません') 
-                error.status = res.status;
-                throw error;
-            }else if(res.status === 422){
-                const error = new Error('パスワードが一致しません') 
-                error.status = res.status;
-                throw error;
-            }else if(res.status!== 200 && res.status !== 201){
-                const error = new Error('サーバー側のなにかのエラー') 
-                error.status = res.status;
-                throw error;
-            }
-            return res.json();
-        })
-        .then(resData => {
-            history.push('/');
-            this.setState({
-                currentUser: 
-                    {
-                        _id: resData.userId,
-                        userName: resData.userName
-                    },
-                token: resData.token,
-                isAuth: true
-            })
-            localStorage.setItem('token', resData.token);
-            localStorage.setItem('userId', resData.userId);
-            localStorage.setItem('userName', resData.userName);
-            const remainingMilliseconds = 60*60*1000;
-            const expiryDate = new Date(
-                new Date().getTime() + remainingMilliseconds
-            );
-            localStorage.setItem('expiryDate', expiryDate.toISOString())
-            this.setAutoLogout(remainingMilliseconds);
-        })
-        .catch(err => {
-            this.setState({
-                err: {
-                    status: err.status,
-                    message: err.message
-                }
-            })
-        })
     }
 
     sendPasswordResetMail = email => {
@@ -481,78 +232,6 @@ class App extends React.Component {
 
     }
 
-    updateUser = async ( oldUserData, newUserData ) => {
-
-    // oldUserDataは、今後フロント側できちんとバリデーションを設定する際のために、一応取ってある。
-
-        try{
-            const method = 'PATCH';
-            const token = localStorage.getItem('token');
-            
-            if(newUserData.password !== newUserData.passwordConfirm){
-                const error = new Error('パスワードが違います') 
-                error.status = 422;
-                throw error;
-            }
-
-            console.log(newUserData.thumb[0]);
-            const formData = new FormData();
-            formData.append('_id', newUserData._id );
-            formData.append('userName', newUserData.userName );
-            formData.append('email', newUserData.email );
-            formData.append('password', newUserData.password );
-            formData.append('passwordConfirm', newUserData.passwordConfirm );
-            formData.append('thumb', newUserData.thumb[0] );
-            formData.append('fruit', newUserData.fruit );
-
-            const res = await fetch(env.API_ORIGIN + 'admin/userStatus', {
-                method: method,
-                headers: {
-                    'Authorization': 'Bearer ' + token
-                },
-                body: formData
-            })
-
-            if(res.status === 422){
-                const error = new Error('すでにそのユーザーネームは使われています') 
-                error.status = res.status;
-                throw error;
-            }else if(res.status!== 200 && res.status !== 201){
-                const error = new Error('サーバー側のなにかのエラー') 
-                error.status = res.status;
-                throw error;
-            }
-
-            const resData = await res.json();
-
-            this.setState({
-                currentUser: {...this.state.currentUser, userName: resData.user.userName},
-                selectedUser: resData.user,
-                result: 'プロフィール更新完了'
-            });
-            localStorage.setItem('userId', resData.user._id);
-            localStorage.setItem('userName', resData.user.userName);
-            history.push(`/profile/${resData.user.userName}`);
-    
-            this.renderPosts();
-
-        }catch(err){
-            this.setState({
-                err: {
-                    status: err.status,
-                    message: err.message
-                }
-            })
-        }
-
-    }
-
-    clickErrorMessage = () => {
-        this.setState({
-            err: ''
-        })
-    }
-
     clickResultMessage = () => {
         this.setState({
             result: ''
@@ -563,36 +242,11 @@ class App extends React.Component {
         return (
             <div className='ui container'>
                 <Router history={history}>
-                    <Header 
-                        isAuth={this.state.isAuth} 
-                        onLogoutClick={this.logoutHandler} 
-                        onProfileButtonClick={this.onProfileButtonClick}
-                        userName={this.state.currentUser.userName}
-                    />
+                    <Header />
                     <div>
-                        <Route path='/' 
-                            exact 
-                            render={ props => 
-                                <Timeline 
-                                    currentUserName={this.state.currentUser.userName}
-                                    posts={this.state.posts} 
-                                    onDeleteClick={this.onDeleteClick}
-                                    onClickAuthorName={this.onClickAuthorName}
-                                    {...props} 
-                                /> 
-                            }
-                        />
-                        <Route path='/post' 
-                            render={ props => <PostEdit onPostSubmit={this.onPostSubmit} {...props} /> }
-                        />
-                        <Route path='/login'
-                            render={ props => 
-                                <LogIn
-                                    onLoginSubmit={this.onLoginSubmit} 
-                                    {...props} 
-                                /> 
-                            } 
-                        />
+                        <Route path='/' exact component={Timeline} /> 
+                        <Route path='/post' component={PostEdit} />
+                        <Route path='/login' component={LogIn} />
                         <Route 
                             path='/forgot-password' 
                             render={ props =>
@@ -613,7 +267,8 @@ class App extends React.Component {
                                 />
                             }
                         />
-                        <Route path='/signup' 
+                        <Route 
+                            path='/signup' 
                             render={ props => 
                                 <SignUp 
                                     addNewUser={this.addNewUser}
@@ -621,36 +276,15 @@ class App extends React.Component {
                                 />
                             }
                         />
-                        <Route path='/profile/:userName' 
-                            exact
-                            render={ props => 
-                                <Profile 
-                                    onRenderEditPage = {this.onRenderEditPage}
-                                    selectedUser={this.state.selectedUser}
-                                    getUser = {this.getUser}
-                                    {...props}
-                                />
-                            } 
-                        />
-                        <Route path='/profile/:userName/edit'
-                            render={ props => 
-                                <ProfileEdit
-                                    selectedUser={this.state.selectedUser}
-                                    getUser = {this.getUser}
-                                    updateUser={this.updateUser}
-                                    {...props}
-                                />
-                            } 
-                        />
+                        <Route path='/profile/:userName' exact component={Profile} />
+                        <Route path='/profile/:userName/edit' component={ProfileEdit} />
                         {/* 
                             ↑ 「React Router v4 でルーティング先の component に Props を渡す方法」参照
                             https://ngzm.hateblo.jp/entry/2017/06/23/001352 
                         */}
                     </div>
                     <ErrorHandler 
-                        error={this.state.err} 
                         result={this.state.result} 
-                        clickErrorMessage={this.clickErrorMessage} 
                         clickResultMessage={this.clickResultMessage} 
                     />
                 </Router>
@@ -659,4 +293,13 @@ class App extends React.Component {
     }
 };
 
-export default App;
+const mapStateToProps = state => {
+    return {
+        selectedUser: state.selectedUser.userData
+    }
+}
+
+export default connect(
+    mapStateToProps,
+    { setUser, showAllTweets }
+)(App);

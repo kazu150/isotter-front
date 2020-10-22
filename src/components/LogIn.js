@@ -1,67 +1,78 @@
 import React from 'react';
+import { Field, reduxForm } from 'redux-form';
+import { connect } from 'react-redux';
+import { signIn, signOut } from '../actions';
+
 import FormEdit from './FormEdit.js';
 import history from '../history.js';
 
 class LogIn extends React.Component {
 
-    state = { userName: '', password: '', err: '' }
+    onSubmit = formValues => {
 
-    onLoginClick = e => {
-        e.preventDefault();
-        this.props.onLoginSubmit(this.state.userName, this.state.password);
-    }
-
-    renderErrorMessage = () => {
-        if(this.state.err){
-            return(
-                <div className="ui negative message">
-                    <div className="header">
-                        Error!!!
-                    </div>
-                    <p>{this.state.err}</p>
-                </div>
-            )
+        if(this.props.isSignedIn){
+            return;
         }
+
+        this.props.signIn(formValues.userName, formValues.password)
+            .then(resData => {
+
+                history.push('/');
+
+                localStorage.setItem('token', this.props.token);
+                localStorage.setItem('userId', this.props.userId);
+                localStorage.setItem('userName', this.props.userName);
+
+                const remainingMilliseconds = 60*60*1000;
+                const expiryDate = new Date(
+                    new Date().getTime() + remainingMilliseconds
+                );
+                localStorage.setItem('expiryDate', expiryDate.toISOString())
+                this.setAutoLogout(remainingMilliseconds);
+            })
+            .catch(err => {})
     }
 
-    onForgotClick = () => {
-        history.push('/forgot-password')
+    renderInput = ({ input, label, placeholder, type }) => {
+        return(
+            <div className="field">
+                <label>{label}</label>
+                <input 
+                    { ...input }
+                    type={type} 
+                    placeholder={placeholder} 
+                />
+            </div>
+        );
     }
 
     render(){
         return (
             <form 
                 className="ui form success"
-                onSubmit={this.onLoginClick}
+                onSubmit={this.props.handleSubmit(this.onSubmit)}
             >
                 <div className="ui medium header">Login</div>
-                <FormEdit 
-                    className="field" 
-                    title="UserName" 
-                    placeholder="test123" 
+                <Field 
                     name="userName" 
-                    value={this.state.userName} 
-                    onChange={ e => this.setState({ userName: e.target.value })} 
+                    label="UserName" 
+                    component={this.renderInput} 
+                    placeholder="namename" 
                 />
-                <FormEdit 
-                    className="field" 
-                    title="Password" 
+                <Field 
+                    name="password" 
+                    label="Password" 
+                    component={this.renderInput} 
+                    placeholder="pwpwpw" 
                     type="password"
-                    placeholder="●●●●●●" 
-                    name={this.state.password} 
-                    onChange={ e => this.setState({ password: e.target.value })} 
                 />
-                {this.renderErrorMessage()}
                 <button type="submit" className="ui submit button">
                     Submit
                 </button>
                 <button 
-                    onClick={this.onForgotClick} 
-                    style={{
-                        display: 'block', 
-                        marginTop: '15px', 
-                        cursor: 'pointer'
-                    }}
+                    onClick={() => history.push('/forgot-password')} 
+                    style={{ marginLeft: '15px' }}
+                    className="ui submit button"
                 >
                     Forgot password?
                 </button>
@@ -70,4 +81,20 @@ class LogIn extends React.Component {
     }
 }
 
-export default LogIn;
+const mapStateToProps = (state) => {
+    return { 
+        isSignedIn: state.auth.isSignedIn,
+        userName: state.auth.userName,
+        userId: state.auth.userId,
+        token: state.auth.token
+    };
+}
+
+const formWrapped = reduxForm({
+    form: 'login'
+})(LogIn)
+
+export default connect(
+    mapStateToProps, 
+    { signIn, signOut }
+)(formWrapped);

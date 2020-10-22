@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
 const Card = props => {
     return(
@@ -20,7 +21,7 @@ const Card = props => {
                     </a>
                     {
                         props.currentUserName === props.userName ?
-                        <a href="/#" className="save" onClick={e => props.onDeleteClick(e)}>
+                        <a href="/#" className="save" onClick={e => props.onDeleteClick(e, props.id )}>
                             <i className="trash icon"></i>
                             Delete
                         </a> :
@@ -40,4 +41,13 @@ const Card = props => {
     );
 }
 
-export default Card;
+const mapStateToProps = state => {
+    return {
+        currentUserName: state.auth.userName
+    }
+}
+
+export default connect(
+    mapStateToProps,
+    null
+)(Card);
