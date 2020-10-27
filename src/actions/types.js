@@ -1,10 +1,15 @@
 export const SIGN_IN = 'SIGN_IN';
 export const SIGN_OUT = 'SIGN_OUT';
+export const SIGN_UP = 'SIGN_UP';
 export const SET_USER = 'SET_USER';
 export const MOD_USER = 'MOD_USER';
 export const SET_ERROR = 'SET_ERROR';
 export const UNSET_ERROR = 'UNSET_ERROR';
+export const SET_RESULT = 'SET_RESULT';
+export const UNSET_RESULT = 'UNSET_RESULT';
 export const FETCH_NEW_TWEET = 'FETCH_NEW_TWEET';
 export const SHOW_ALL_TWEETS = 'SHOW_ALL_TWEETS';
 export const FETCH_USER_DATA = 'FETCH_USER_DATA';
 export const DELETE_POST = 'DELETE_POST';
+export const VALIDATE_RESET_PAGE = 'VALIDATE_RESET_PAGE';
+export const RESET_PASSWORD = 'RESET_PASSWORD';

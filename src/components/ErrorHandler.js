@@ -1,8 +1,9 @@
 import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
-import { unsetError } from '../actions'
+import { unsetError, unsetResult } from '../actions'
 
 class ErrorHandler extends React.Component {
+
     render(){
         return(
             <Fragment>
@@ -12,10 +13,10 @@ class ErrorHandler extends React.Component {
                         <p>{this.props.errorStatus.toString()}（クリックでメッセージを閉じる）</p>
                     </div>
                 )}
-                {this.props.result && (
-                    <div className="ui success message" onClick={this.props.clickResultMessage}>
+                {this.props.resultStatus && (
+                    <div className="ui success message" onClick={this.props.unsetResult}>
                         <div className="header">サクセス！</div>
-                        <p>{this.props.result}（クリックでメッセージを閉じる）</p>
+                        <p>{this.props.resultStatus.toString()}（クリックでメッセージを閉じる）</p>
                     </div>
                 )}
             </Fragment>
@@ -25,11 +26,12 @@ class ErrorHandler extends React.Component {
 
 const mapStateToProps = state => {
     return {
-        errorStatus: state.error.errorStatus
+        errorStatus: state.error.errorStatus,
+        resultStatus: state.error.resultStatus
     }
 }
 
 export default connect(
     mapStateToProps,
-    { unsetError }
+    { unsetError, unsetResult }
 )(ErrorHandler);

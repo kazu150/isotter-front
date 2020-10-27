@@ -1,9 +1,82 @@
+import { connect } from 'react-redux';
 import React, { Fragment } from 'react';
+
+import { validateResetPage, resetPassword } from '../actions';
 import FormEdit from './FormEdit.js';
 
 class ResetPassword extends React.Component {
 
     state = { password: '', passwordConfirm: '', err: '' }
+
+    componentDidMount = () => {
+        this.props.validateResetPage(this.props.match.params.token);
+
+        // fetch(env.API_ORIGIN + 'admin/reset-password/' + this.props.match.params.token)
+        //     .then(res => {
+        //         return res.json();
+        //     })
+        //     .then(resData => {
+        //         if(resData.isValid){
+        //             this.setState({
+        //                 isValidToken: true
+        //             })
+        //         }else {
+        //             this.setState({
+        //                 isValidToken: false
+        //             })
+        //             const error = new Error('このURLは無効です') 
+        //             error.status = 403;
+        //             throw error;
+        //         }
+        //     })
+        //     .catch(err => {
+        //         this.setState({
+        //             err: {
+        //                 status: err.status,
+        //                 message: err.message
+        //             }
+        //         })
+        //     })
+    }
+    
+    // resetPassword = async (password, passwordConfirm, token) => {
+    //     try{
+    //         const method = 'PATCH';
+    //         if(password !== passwordConfirm){
+    //             const error = new Error('パスワードが違います') 
+    //             error.status = 422;
+    //             throw error;
+    //         }
+
+    //         const res = await fetch(env.API_ORIGIN + 'admin/reset-password/' + token, {
+    //             method: method,
+    //             headers: {
+    //                 'Content-Type':'application/json'
+    //             },
+    //             body: JSON.stringify({
+    //                 password: password
+    //             })
+    //         })
+
+    //         const resData = await res.json();
+
+    //         if(resData.message){
+    //             this.setState({
+    //                 result: 'パスワード変更完了！'
+    //             })
+    //             history.push('/login')
+    //         }
+
+    //     } catch (err) {
+    //         this.setState({
+    //             err: {
+    //                 status: err.status,
+    //                 message: err.message
+    //             }
+    //         })
+    //     }
+    // }
+    
 
     onSubmitClick = e => {
         e.preventDefault();
@@ -12,10 +85,6 @@ class ResetPassword extends React.Component {
             this.state.passwordConfirm,
             this.props.match.params.token
         );
-    }
-
-    componentDidMount = () => {
-        this.props.validateResetPage(this.props.match.params.token)
     }
 
     renderErrorMessage = () => {
@@ -62,7 +131,7 @@ class ResetPassword extends React.Component {
                             Submit
                         </button>
                     </form> : 
-                    ''
+                    'トークンが無効です'
                 }
                 
             </Fragment>
@@ -70,4 +139,13 @@ class ResetPassword extends React.Component {
     }
 }
 
-export default ResetPassword;
+const mapStateToProps = state => {
+    return {
+        isValidToken: state.reset.isValidToken
+    }
+}
+
+export default connect(
+    mapStateToProps,
+    { validateResetPage, resetPassword }
+)(ResetPassword);

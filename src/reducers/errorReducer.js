@@ -1,7 +1,8 @@
-import { SET_ERROR, UNSET_ERROR } from '../actions/types';
+import { SET_ERROR, UNSET_ERROR, SET_RESULT, UNSET_RESULT } from '../actions/types';
 
 const INITIAL_STATE = {
-    errorStatus: null
+    errorStatus: null,
+    resultStatus: null
 }
 
 export default (state= INITIAL_STATE, action) => {
@@ -15,6 +16,16 @@ export default (state= INITIAL_STATE, action) => {
             return {
                 ...state,
                 errorStatus: null
+            }
+        case SET_RESULT:
+            return {
+                ...state,
+                resultStatus: action.payload
+            }
+        case UNSET_RESULT:
+            return {
+                ...state,
+                resultStatus: null
             }
         default: 
             return state;

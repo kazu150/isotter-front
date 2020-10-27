@@ -3,7 +3,6 @@ import { Field, reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
 import { signIn, signOut } from '../actions';
 
-import FormEdit from './FormEdit.js';
 import history from '../history.js';
 
 class LogIn extends React.Component {

@@ -1,4 +1,4 @@
-import { SIGN_IN, SIGN_OUT, SET_USER, MOD_USER } from '../actions/types';
+import { SIGN_IN, SIGN_OUT, SET_USER, MOD_USER, SIGN_UP } from '../actions/types';
 
 const INITIAL_STATE = {
     isSignedIn: null,
@@ -9,6 +9,8 @@ const INITIAL_STATE = {
 
 export default (state = INITIAL_STATE, action) => {
     switch(action.type) {
+        case SIGN_UP:
+            return state;
         case SIGN_IN:
         case SET_USER:
             return {

@@ -1,12 +1,9 @@
 import React from 'react';
 import { Field, reduxForm } from 'redux-form';
-import history from '../history.js';
-import env from '../environment';
 import { connect } from 'react-redux';
 import { tweet } from '../actions';
 
 class PostEdit extends React.Component {
-    state={ post: '' }; 
 
     renderError = ({error, touched}) => {
         if(touched && error){

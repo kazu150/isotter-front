@@ -7,6 +7,10 @@ const INITIAL_STATE = {
 export default (state = INITIAL_STATE, action) => {
     switch (action.type) {
         case FETCH_NEW_TWEET:
+            return {
+                ...state,
+                allTweets: [ ...state.allTweets, action.payload ]
+            }
         case SHOW_ALL_TWEETS:
             return {
                 ...state,

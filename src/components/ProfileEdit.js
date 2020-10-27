@@ -2,7 +2,6 @@ import React from 'react';
 import { Field, reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
 import { modUserData } from '../actions';
-import FormEdit from './FormEdit';
 import history from '../history';
 
 class ProfileEdit extends React.Component {

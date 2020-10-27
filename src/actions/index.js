@@ -2,14 +2,19 @@ import isotter from '../apis/isotter';
 import { 
     SIGN_IN, 
     SIGN_OUT, 
+    SIGN_UP,
     SET_USER,
     MOD_USER,
     SET_ERROR, 
     UNSET_ERROR,
+    SET_RESULT,
+    UNSET_RESULT,
     FETCH_NEW_TWEET,
     SHOW_ALL_TWEETS,
     FETCH_USER_DATA,
-    DELETE_POST
+    DELETE_POST,
+    VALIDATE_RESET_PAGE,
+    RESET_PASSWORD
 } from './types';
 import history from '../history.js';
 import env from '../environment';
@@ -34,10 +39,38 @@ export  const signIn = (userName, password) => async dispatch => {
 };
 
 export const signOut = () => {
-    return {
-        type: SIGN_OUT
-    };
+    localStorage.removeItem('token');
+    localStorage.removeItem('userId');
+    localStorage.removeItem('userName');
+    localStorage.removeItem('expiryDate');
+
+    return { type: SIGN_OUT };
 };
+
+export const signUp = ( formValues ) => async dispatch => {
+    console.log(formValues)
+
+    try {
+        const response = await isotter.put('/admin/signup/', {
+            userName: formValues.userName,
+            email: formValues.email,
+            password: formValues.password,
+            confirmPassword: formValues.passwordConfirm
+        })
+
+        if(response.status !== 201){
+            throw new Error('登録できませんでした')
+        }
+
+        dispatch({ type: SIGN_UP });
+        history.push('/login');
+        
+    } catch (error) {
+        dispatch({ type: SET_ERROR, payload: error });
+    }
+
+
+}
 
 export const setUser = (userName, userId, token) => {
     return {
@@ -73,9 +106,7 @@ export const modUserData = (userData, token) => async dispatch => {
 
     try {
         const response = await isotter.patch('/admin/userStatus', 
-            {
-                formData: userData
-            },
+            { formData: userData },
             config
         )
         console.log(response);
@@ -138,7 +169,7 @@ export const tweet = (formValues, userId, token) => async dispatch => {
 
     }
 
-    dispatch({ type: FETCH_NEW_TWEET, payload: response.data });
+    dispatch({ type: FETCH_NEW_TWEET, payload: response.data.post });
     return;
 };
 
@@ -153,17 +184,83 @@ export const deletePost = (postId, token) => async dispatch => {
             '/timeline/post/' + postId, 
             config
         );
+        
+        if(response.status !== 201){
+            throw new Error('何かしらのエラー')
+        }
+
+        dispatch({ type: DELETE_POST, payload: response.data.deletedPost })
+        return;
+
     }catch(error){
         dispatch({ type: SET_ERROR, payload: error });
     }
-    dispatch({ type: DELETE_POST, payload: response.data.deletedPost })
-    return;
 }
+
+// PasswordReset
+
+export const sendPasswordResetRequest = (email) => async dispatch => {
+
+    try {
+        const response = await isotter.post(
+            '/admin/reset-password',
+            { email: email }
+        ) 
+
+        if(response.status !== 200){
+            throw new Error('何かしらのエラー')
+        }
+
+        dispatch({ 
+            type: SET_RESULT, 
+            payload: `メールアドレス：${email}宛にメッセージを送りました。メール内のURLから、パスワード再設定をお願います`
+        });
+
+    } catch (error) {
+        dispatch({ type: SET_ERROR, payload: error });
+    }
+}
+
+export const validateResetPage = (token) => async dispatch => {
+    const response = await isotter.get(
+        '/admin/reset-password/' + token
+    );
+
+    dispatch({ type: VALIDATE_RESET_PAGE, payload: response.data.isValid });
+};
+
+export const resetPassword = (password, passwordConfirm, token) => async dispatch => {
+
+    try {
+        if(password !== passwordConfirm){
+            const error = new Error('パスワードが違います') 
+            error.status = 422;
+            throw error;
+        };
+
+        const response = await isotter.patch(
+            'admin/reset-password/' + token,
+            { password: password }
+        );
+    
+        if(response.status !== 201){
+            throw new Error('何かしらのエラー');
+        }
+    
+        dispatch({ type: RESET_PASSWORD });
+        history.push('/login');
+
+    } catch(error){
+        dispatch({ type: SET_ERROR, payload: error });
+    }
+};
 
 // Error
 
 export const unsetError = () => {
-    return {
-        type: UNSET_ERROR
-    };
+    return { type: UNSET_ERROR };
+};
+
+export const unsetResult = () => {
+    return { type: UNSET_RESULT };
 };
