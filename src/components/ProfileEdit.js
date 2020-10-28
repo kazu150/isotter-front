@@ -1,99 +1,83 @@
 import React from 'react';
-import FormEdit from './FormEdit.js';
+import { Field, reduxForm } from 'redux-form';
+import { connect } from 'react-redux';
+import { modUserData } from '../actions';
+import history from '../history';
 
 class ProfileEdit extends React.Component {
 
-    state = {
-        user: {},
-        oldUser: {},
-        pwConfirm: '',
-        fruit: '',
-        err: ''
+    onSubmit = async ( formValues ) => {
+
+        const token = localStorage.getItem('token');
+
+        this.props.modUserData(formValues, token)
+            .then(resData => {
+                localStorage.setItem('userId', resData._id);
+                localStorage.setItem('userName', resData.userName);
+                history.push(`/profile/${resData.userName}`);
+            })
+            .catch(err => {})
     }
-
-    componentDidMount = async () => {
-        await this.props.getUser(this.props.match.params.userName);
-        this.setState({
-            user: {...this.props.selectedUser},
-            oldUser: {...this.props.selectedUser}
-        })
-    }
-
-
-    onUpdateSubmit = (e) => {
-        e.preventDefault();
-        this.props.updateUser(this.state.oldUser, this.state.user);
-        this.setState({
-            user: {...this.props.selectedUser},
-            oldUser: {...this.props.selectedUser}
-        })
-    }
-
-    onStatusChange = e => {
-        const user = this.state.user;
-        const targetKey = e.target.name;
-        if(e.target.type === 'file'){
-            user[targetKey] = e.target.files;
-        }else{
-            user[targetKey] = e.target.value;
-        }
-        this.setState({
-            user: {...user}
-        })
+    
+    renderInput = ({ input, label, placeholder, type }) => {
+        return(
+            <div className ="field">
+                <label>{label}</label>
+                <input
+                    {...input}
+                    type = {type}
+                    placeholder = {placeholder}
+                />
+            </div>
+        );
     }
 
     render(){
         return (
-            <form onSubmit={this.onUpdateSubmit} className='ui form success'>
+            <form 
+                className='ui form success'
+                onSubmit={this.props.handleSubmit(this.onSubmit)} 
+            >
                 <div className="ui medium header">Edit Profile of "{this.props.match.params.userName}"</div>
-                <FormEdit 
-                    className="field" 
-                    title="UserName (at least 5 letters) *" 
-                    name="userName"
-                    value={this.state.user.userName} 
-                    onChange={this.onStatusChange}
-                    placeholder="test123" 
+                <Field 
+                    label="ユーザーネーム *" 
+                    name ="userName"
+                    component = {this.renderInput}
+                    placeholder = "namename"
                 />
-                <FormEdit 
-                    className="field" 
-                    title="E-mail *" 
-                    name="email"
-                    value={this.state.user.email} 
-                    onChange={this.onStatusChange}
-                    placeholder="test@test.com" 
+                <Field 
+                    label="メールアドレス *"
+                    name ="email"
+                    component = {this.renderInput}
+                    placeholder = "mailmail"
                 />
-                <FormEdit 
-                    className="field" 
-                    title="Thumbnail *"
+                <Field 
+                    label="サムネイル *"
                     name="thumb"
                     type="file"
-                    value={this.state.user.thumb}
-                    onChange={this.onStatusChange}
+                    component = {this.renderInput}
                     placeholder="test@test.com" 
                 />
-                <FormEdit 
-                    className="field" 
-                    title="Password (at least 6 letters. Please check your email to validate password change) *" 
-                    type="password"
+                <Field 
+                    label="パスワード (６文字以内。パスワードの変更を完了するには、メール認証が必要です) *" 
                     name="password"
-                    value={this.state.user.password} 
-                    onChange={this.onStatusChange}
-                    placeholder="●●●●●●" />
-                <FormEdit 
-                    className="field" 
-                    title="Password Confirmation *" 
                     type="password"
+                    component = {this.renderInput}
+                    placeholder="●●●●●●" 
+                />
+                <Field 
+                    label="パスワード（確認） *" 
                     name="passwordConfirm"
-                    value={this.state.user.passwordConfirm} 
-                    onChange={this.onStatusChange}
-                    placeholder="●●●●●●" />
-                <FormEdit 
-                    className="field" 
-                    title="Favorite Fruit" 
+                    type="password"
+                    component = {this.renderInput}
+                    placeholder="●●●●●●" 
+                />
+                <Field 
+                    label="好きなフルーツ" 
                     name="fruit"
-                    value={this.state.user.fruit} 
-                    onChange={this.onStatusChange}
-                    placeholder="Orange" />
+                    component = {this.renderInput}
+                    placeholder="Orange" 
+                />
                 <button type="submit" className='ui submit button red'>Update</button>
             </form>
         );
@@ -101,4 +85,27 @@ class ProfileEdit extends React.Component {
     }
 }
 
-export default ProfileEdit;
+const mapStateToProps = ( state ) => {
+    return {
+        selectedUser: state.selectedUser,
+        initialValues: { 
+            _id: state.selectedUser._id,
+            userName: state.selectedUser.userName,
+            email: state.selectedUser.email,
+            thumb: null,
+            password: null,
+            passwordConfirm: null,
+            fruit: state.selectedUser.fruit || null
+        }
+    }
+}
+
+const formWrapped = reduxForm({
+    form: 'profile',
+    enableReinitialize: true
+}, mapStateToProps )(ProfileEdit);
+
+export default connect(
+    mapStateToProps,
+    { modUserData }
+)(formWrapped);

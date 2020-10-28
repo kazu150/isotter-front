@@ -1,16 +1,12 @@
 import React from 'react';
+import { getUserData } from '../actions';
+import { connect } from 'react-redux';
+import history from '../history'
 
 class Profile extends React.Component {
 
-    state = {
-        user: this.props.selectedUser,
-        pwConfirm: '',
-        fruit: '',
-        err: ''
-    }
-
     componentDidMount = () => {
-        this.props.getUser(this.props.match.params.userName);
+        this.props.getUserData(this.props.match.params.userName);
     }
 
     renderEditButton = () => {
@@ -18,14 +14,14 @@ class Profile extends React.Component {
         const browsedUser = this.props.match.params.userName;
         if(loginUser === browsedUser){
             return (
-                <button onClick={this.onEditClick} className='ui submit button'>Edit</button>
+                <button 
+                    onClick={() => history.push(`/profile/${loginUser}/edit`)} 
+                    className='ui submit button'
+                >
+                    Edit
+                </button>
             ) 
         }
-    }
-
-    onEditClick = (e) => {
-        e.preventDefault();
-        this.props.onRenderEditPage(this.props.match.params.userName);
     }
 
     render(){
@@ -61,4 +57,13 @@ class Profile extends React.Component {
     }
 }
 
-export default Profile;
+const mapStateToProps = state => {
+    return {
+        selectedUser: state.selectedUser
+    }
+}
+
+export default connect(
+    mapStateToProps,
+    { getUserData }
+)(Profile);
