@@ -1,4 +1,6 @@
 # isotter-front
+シンプルなツイッター風SNSアプリです。  
+React, Redux, Node.js, Mongo.dbの学習用として作成しました。
 
 ## ツイッター風SNSアプリ
 アプリは、こちらのクライアントサイドリポジトリと、  
