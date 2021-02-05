@@ -1,6 +1,6 @@
 # isotter-front
 シンプルなツイッター風SNSアプリです。  
-React, Redux, Node.js, Mongo.dbの学習用として作成しました。
+React, Redux, Node.js, Mongo.dbの学習用として作成しました。  
 アプリURL： https://isotter.netlify.app/
 
 ## ツイッター風SNSアプリ
