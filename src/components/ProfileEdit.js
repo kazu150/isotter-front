@@ -25,6 +25,8 @@ class ProfileEdit extends React.Component {
                 <label>{label}</label>
                 <input
                     {...input}
+                    // Type "file"に対してはvalueを空文字としておく必要がある
+                    value={type === 'file' ? "" : input.value}
                     type = {type}
                     placeholder = {placeholder}
                 />
