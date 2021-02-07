@@ -104,11 +104,39 @@ export const modUserData = (userData, token) => async dispatch => {
         headers: { 'Authorization': 'Bearer ' + token }
     };
 
+    // file(画像等)を含む場合は、JSONではなくフォーム形式で送る必要がある
+    const formData = new FormData();
+    formData.append('_id', userData._id)    
+    if(userData.email){
+        formData.append('email', userData.email)
+    }    
+    if(userData.fruit){
+    formData.append('fruit', userData.fruit)
+    }
+    if(userData.password){
+        formData.append('password', userData.password)
+        formData.append('passwordConfirm', userData.passwordConfirm)
+    }
+    if(userData.thumb){
+        formData.append('thumb', userData.thumb)
+    }
+    if(userData.userName){
+        formData.append('userName', userData.userName)
+    }
+    for(let item of formData){
+        console.log(item);
+    }
+
     try {
-        const response = await isotter.patch('/admin/userStatus', 
-            { formData: userData },
-            config
+        const response = await fetch(
+            'http://localhost:8080/admin/userStatus',
+            {
+                method: 'PATCH',
+                headers: { 'Authorization': 'Bearer ' + token },
+                body: formData
+            }
         )
+
         console.log(response);
         newUserData = response.data.user;
     } catch(error) {

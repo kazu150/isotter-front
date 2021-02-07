@@ -6,8 +6,12 @@ import history from '../history';
 
 class ProfileEdit extends React.Component {
 
-    onSubmit = async ( formValues ) => {
+    // constructor(props){
+    //     super(props);
+    //     this.fileInput = React.createRef();
+    // }
 
+    onSubmit = async ( formValues ) => {
         const token = localStorage.getItem('token');
 
         this.props.modUserData(formValues, token)
@@ -24,12 +28,32 @@ class ProfileEdit extends React.Component {
             <div className ="field">
                 <label>{label}</label>
                 <input
+                    // もとはinputプロパティ全体をサーバに投げてたが、コメントアウトしていいのか
                     {...input}
                     type = {type}
                     placeholder = {placeholder}
+                    // ref = {this.fileInput}
                 />
             </div>
         );
+    }
+
+    renderFileUpload = (props) => {
+        const { input, label } = props
+        const onInputChange = (e) => {
+            e.preventDefault();
+            const files = [...e.target.files];
+            input.onChange(files[0]);
+        };
+        return (
+        <div className="field">
+        <label>{label}</label>
+            <input 
+                type="file"
+                onChange={onInputChange}
+            />
+        </div>
+        )
     }
 
     render(){
@@ -54,9 +78,7 @@ class ProfileEdit extends React.Component {
                 <Field 
                     label="サムネイル *"
                     name="thumb"
-                    type="file"
-                    component = {this.renderInput}
-                    placeholder="test@test.com" 
+                    component = {this.renderFileUpload}
                 />
                 <Field 
                     label="パスワード (６文字以内。パスワードの変更を完了するには、メール認証が必要です) *" 
