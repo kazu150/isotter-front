@@ -134,10 +134,15 @@ export const modUserData = (userData, token) => async dispatch => {
             }
         )
 
-        console.log(response);
+        if(!response.ok) {
+            console.log(`${response.status} ${response.statusText}`)
+            throw new Error(response.json())
+        }
+
         newUserData = response.data.user;
     } catch(error) {
-        dispatch({ type: SET_ERROR, payload: error.response });
+        console.log(error)
+        dispatch({ type: SET_ERROR, payload: error });
     }
     
     dispatch({ type: FETCH_USER_DATA, payload: newUserData });

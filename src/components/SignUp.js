@@ -124,7 +124,7 @@ class SignUp extends React.Component {
                     component={this.renderInput}
                 />
                 {this.renderErrorMessage()}
-                <button className='ui submit button' type="submit">Submit</button>
+                <button className='ui submit button' type="submit">送信</button>
             </form>
         )
     }
