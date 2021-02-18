@@ -1,7 +1,7 @@
 import React from 'react';
 import { Field, reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
-import { signUp } from '../actions';
+import { signUp, setError } from '../actions';
 
 class SignUp extends React.Component {
 
@@ -27,7 +27,52 @@ class SignUp extends React.Component {
     }
     
     onSubmit = (formValues) => {
+        
+        // サインイン済みかどうか
+        if(this.props.isSignedIn){
+            this.props.setError({
+                status: 403,
+                errorMessage: 'すでにサインインしています'
+            })
+            return;
+        }
 
+        // ユーザー名は入力されているか
+        if(!formValues.userName || formValues.userName.length < 5) {
+            this.props.setError({
+                status: 403,
+                errorMessage: 'ユーザー名を5文字以上で入力してください'
+            })
+            return;
+        }
+
+        // Eメールは入力されているか
+        if(!formValues.email) {
+            this.props.setError({
+                status: 403,
+                errorMessage: 'Eメールを入力してください'
+            })
+            return;
+        }
+
+        // パスワードは入力されているか
+        if(!formValues.password || formValues.password.length < 6) {
+            this.props.setError({
+                status: 403,
+                errorMessage: 'パスワードを6文字以上で入力してください'
+            })
+            return;
+        }
+        
+        // パスワードは入力されているか
+        if(formValues.passwordConfirm !== formValues.password) {
+            this.props.setError({
+                status: 403,
+                errorMessage: 'パスワードが一致しません'
+            })
+            return;
+        }
+        
         this.props.signUp(formValues);
 
     }
@@ -51,7 +96,7 @@ class SignUp extends React.Component {
                 onSubmit={this.props.handleSubmit(this.onSubmit)} 
                 className='ui form success'
             >
-                <div className="ui medium header">SignUp</div>
+                <div className="ui medium header">サインアップ</div>
                 <Field 
                     name="userName"
                     label="ユーザーネーム（５文字以上）【必須】"
@@ -85,11 +130,17 @@ class SignUp extends React.Component {
     }
 }
 
+const mapStateToProps = state => {
+    return {
+        isSignedIn: state.auth.isSignedIn
+    }
+}
+
 const formWrapped = reduxForm({
     form: 'signUp'
 })(SignUp)
 
 export default connect(
-    null,
-    { signUp }
+    mapStateToProps,
+    { signUp, setError }
 )(formWrapped);
