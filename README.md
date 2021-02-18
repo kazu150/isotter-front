@@ -4,7 +4,8 @@ React, Redux, Node.js, Mongo.dbの学習用として作成しました。
 アプリURL： https://isotter.netlify.app/
 
 ## デモ（ゲストログイン）
-ID: guest
+https://isotter.netlify.app/  
+ID: guest  
 Pass: 111111
 
 ## ツイッター風SNSアプリ
