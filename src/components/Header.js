@@ -27,7 +27,7 @@ class Header extends React.Component {
                         className="item right" 
                         onClick={this.props.signOut}
                     >
-                        Log Out
+                        ログアウト
                     </Link>
                 </div>
             )

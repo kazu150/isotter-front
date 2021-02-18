@@ -35,7 +35,7 @@ class ForgotPassword extends React.Component {
                 <p>Isotterに登録済みのメールアドレスを入力してください。</p>
                 <FormEdit 
                     className="field" 
-                    title="email" 
+                    title="メールアドレス" 
                     placeholder="test123@test123.com" 
                     name="email" 
                     value={this.state.email} 
@@ -43,7 +43,7 @@ class ForgotPassword extends React.Component {
                 />
                 {this.renderErrorMessage()}
                 <button type="submit" className="ui submit button">
-                    Submit
+                    送信
                 </button>
             </form>
         );

@@ -18,7 +18,7 @@ class Profile extends React.Component {
                     onClick={() => history.push(`/profile/${loginUser}/edit`)} 
                     className='ui submit button'
                 >
-                    Edit
+                    プロフィール編集
                 </button>
             ) 
         }

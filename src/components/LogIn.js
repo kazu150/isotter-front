@@ -69,6 +69,7 @@ class LogIn extends React.Component {
                     { ...input }
                     type={type} 
                     placeholder={placeholder} 
+                    autoComplete="off"
                 />
             </div>
         );
@@ -98,7 +99,10 @@ class LogIn extends React.Component {
                     送信
                 </button>
                 <button 
-                    onClick={() => history.push('/forgot-password')} 
+                    onClick={(e) => {
+                        e.preventDefault();
+                        history.push('/forgot-password')
+                    }} 
                     style={{ marginLeft: '15px' }}
                     className="ui submit button"
                 >

@@ -37,7 +37,7 @@ class PostEdit extends React.Component {
                 onSubmit={this.props.handleSubmit(this.onSubmit)} 
                 className='ui form error'
             >
-                <div className="ui medium header">Write a post</div>
+                <div className="ui medium header">投稿</div>
                 <Field name="content" label="ツイートを書く" component={this.renderInput} />
                 <button className='ui submit button'>Submit</button>
             </form>

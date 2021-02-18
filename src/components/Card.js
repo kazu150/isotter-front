@@ -2,6 +2,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 const Card = props => {
+    const splittedDate = props.time.split(/-|_|T|:|\./)
+    const formedDate = `${splittedDate[0]}/${splittedDate[1]}/${splittedDate[2]} ${splittedDate[3]}:${splittedDate[4]}`
+
     return(
         <div className="comment">
             <a href="/#" onClick={(e) => props.onClickAuthorName(e, props.userName)} className="avatar">
@@ -13,7 +16,7 @@ const Card = props => {
                 <div className="actions">
                     <a href="/#" style={{ cursor: 'default', color: 'rgba(0,0,0,.4)' }} onClick={e => e.preventDefault()}>
                         <i className="clock icon"></i>
-                        {props.time}
+                        {formedDate}
                     </a>
                     {
                         props.currentUserName === props.userName &&
