@@ -1,18 +1,43 @@
 import React from 'react';
 import { Field, reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
-import { signIn, signOut } from '../actions';
+import { signIn, signOut, setError } from '../actions';
 
 import history from '../history.js';
 
 class LogIn extends React.Component {
 
+    // ログインボタン押下時の挙動
     onSubmit = formValues => {
 
+        // サインイン済みかどうか
         if(this.props.isSignedIn){
+            this.props.setError({
+                status: 403,
+                errorMessage: 'すでにサインインしています'
+            })
             return;
         }
 
+        // ユーザー名は入力されているか
+        if(!formValues.userName) {
+            this.props.setError({
+                status: 403,
+                errorMessage: 'ユーザー名を入力してください'
+            })
+            return;
+        }
+
+        // パスワードは入力されているか
+        if(!formValues.password) {
+            this.props.setError({
+                status: 403,
+                errorMessage: 'パスワードを入力してください'
+            })
+            return;
+        }
+
+        // フロント側でバリデーション通れば、Actionに処理を渡す
         this.props.signIn(formValues.userName, formValues.password)
             .then(resData => {
 
@@ -22,6 +47,7 @@ class LogIn extends React.Component {
                 localStorage.setItem('userId', this.props.userId);
                 localStorage.setItem('userName', this.props.userName);
 
+                // ログイントークンの有効期限を設定
                 const remainingMilliseconds = 60*60*1000;
                 const expiryDate = new Date(
                     new Date().getTime() + remainingMilliseconds
@@ -29,7 +55,9 @@ class LogIn extends React.Component {
                 localStorage.setItem('expiryDate', expiryDate.toISOString())
                 this.setAutoLogout(remainingMilliseconds);
             })
-            .catch(err => {})
+            .catch(err => {
+                console.log(err)
+            })
     }
 
     renderInput = ({ input, label, placeholder, type }) => {
@@ -51,29 +79,29 @@ class LogIn extends React.Component {
                 className="ui form success"
                 onSubmit={this.props.handleSubmit(this.onSubmit)}
             >
-                <div className="ui medium header">Login</div>
+                <div className="ui medium header">ログイン</div>
                 <Field 
                     name="userName" 
-                    label="UserName" 
+                    label="ユーザー名" 
                     component={this.renderInput} 
-                    placeholder="namename" 
+                    placeholder="userName" 
                 />
                 <Field 
                     name="password" 
-                    label="Password" 
+                    label="パスワード" 
                     component={this.renderInput} 
-                    placeholder="pwpwpw" 
+                    placeholder="password" 
                     type="password"
                 />
                 <button type="submit" className="ui submit button">
-                    Submit
+                    送信
                 </button>
                 <button 
                     onClick={() => history.push('/forgot-password')} 
                     style={{ marginLeft: '15px' }}
                     className="ui submit button"
                 >
-                    Forgot password?
+                    パスワードを忘れた場合
                 </button>
             </form>
         );
@@ -95,5 +123,5 @@ const formWrapped = reduxForm({
 
 export default connect(
     mapStateToProps, 
-    { signIn, signOut }
+    { signIn, signOut, setError }
 )(formWrapped);

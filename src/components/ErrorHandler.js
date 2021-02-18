@@ -9,7 +9,7 @@ class ErrorHandler extends React.Component {
             <Fragment>
                 {this.props.errorStatus && (
                     <div className="ui negative message" onClick={this.props.unsetError}>
-                        <div className="header">エラー！（エラーコード：（redux使ったときにエラーコードの取得ができない………））</div>
+                        <div className="header">エラー！（エラーコード：{this.props.errorCode}）</div>
                         <p>{this.props.errorStatus.toString()}（クリックでメッセージを閉じる）</p>
                     </div>
                 )}
@@ -26,6 +26,7 @@ class ErrorHandler extends React.Component {
 
 const mapStateToProps = state => {
     return {
+        errorCode: state.error.errorCode,
         errorStatus: state.error.errorStatus,
         resultStatus: state.error.resultStatus
     }
