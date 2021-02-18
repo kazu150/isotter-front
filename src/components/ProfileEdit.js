@@ -20,7 +20,9 @@ class ProfileEdit extends React.Component {
                 localStorage.setItem('userName', resData.userName);
                 history.push(`/profile/${resData.userName}`);
             })
-            .catch(err => {})
+            .catch(err => {
+                console.log(err)
+            })
     }
     
     renderInput = ({ input, label, placeholder, type }) => {
