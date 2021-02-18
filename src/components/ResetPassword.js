@@ -11,73 +11,8 @@ class ResetPassword extends React.Component {
     componentDidMount = () => {
         this.props.validateResetPage(this.props.match.params.token);
 
-        // fetch(env.API_ORIGIN + 'admin/reset-password/' + this.props.match.params.token)
-        //     .then(res => {
-        //         return res.json();
-        //     })
-        //     .then(resData => {
-        //         if(resData.isValid){
-        //             this.setState({
-        //                 isValidToken: true
-        //             })
-        //         }else {
-        //             this.setState({
-        //                 isValidToken: false
-        //             })
-        //             const error = new Error('このURLは無効です') 
-        //             error.status = 403;
-        //             throw error;
-        //         }
-        //     })
-        //     .catch(err => {
-        //         this.setState({
-        //             err: {
-        //                 status: err.status,
-        //                 message: err.message
-        //             }
-        //         })
-        //     })
     }
     
-    // resetPassword = async (password, passwordConfirm, token) => {
-    //     try{
-    //         const method = 'PATCH';
-    //         if(password !== passwordConfirm){
-    //             const error = new Error('パスワードが違います') 
-    //             error.status = 422;
-    //             throw error;
-    //         }
-
-    //         const res = await fetch(env.API_ORIGIN + 'admin/reset-password/' + token, {
-    //             method: method,
-    //             headers: {
-    //                 'Content-Type':'application/json'
-    //             },
-    //             body: JSON.stringify({
-    //                 password: password
-    //             })
-    //         })
-
-    //         const resData = await res.json();
-
-    //         if(resData.message){
-    //             this.setState({
-    //                 result: 'パスワード変更完了！'
-    //             })
-    //             history.push('/login')
-    //         }
-
-    //     } catch (err) {
-    //         this.setState({
-    //             err: {
-    //                 status: err.status,
-    //                 message: err.message
-    //             }
-    //         })
-    //     }
-    // }
-    
-
     onSubmitClick = e => {
         e.preventDefault();
         this.props.resetPassword(

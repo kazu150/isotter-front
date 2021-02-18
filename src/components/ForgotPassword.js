@@ -7,58 +7,6 @@ class ForgotPassword extends React.Component {
 
     state = { email: '', err: '' }
 
-    // sendPasswordResetMail = email => {
-    //     const method = 'POST';
-
-    //     if(!email){
-    //         return this.setState({
-    //             err: {
-    //                 status: 404,
-    //                 message: 'emailを入力してください'
-    //             }
-    //         })
-    //     }
-
-    //     fetch(env.API_ORIGIN + 'admin/reset-password', {
-    //         method: method,
-    //         headers: {
-    //             'Content-Type':'application/json'
-    //         },
-    //         body: JSON.stringify({
-    //             email: email
-    //         })
-    //     })
-    //     .then(res => {
-    //         if(res.status === 404){
-    //             const error = new Error('メールアドレスが登録されていないか、有効なメールアドレスの形式が有効ではありません') 
-    //             error.status = res.status;
-    //             throw error;
-    //         }else if(res.status === 500){
-    //             const error = new Error('サーバ側の何らかの理由でメールが送信できませんでした。時間を空けてお試しください') 
-    //             error.status = res.status;
-    //             throw error;
-    //         }else if(res.status!== 200 && res.status !== 201){
-    //             const error = new Error('サーバー側のなにかのエラー') 
-    //             error.status = res.status;
-    //             throw error;
-    //         }
-    //         return res.json()
-    //     })
-    //     .then(resData => {
-    //         this.setState({
-    //             result: `メールアドレス：${resData.email}宛にメッセージを送りました。メール内のURLから、パスワード再設定をお願いします。`
-    //         })
-    //     })
-    //     .catch(err => {
-    //         this.setState({
-    //             err: {
-    //                 status: err.status,
-    //                 message: err.message
-    //             }
-    //         })
-    //     })
-    // }
-
     onSubmitClick = e => {
         e.preventDefault();
         this.props.sendPasswordResetRequest(this.state.email);

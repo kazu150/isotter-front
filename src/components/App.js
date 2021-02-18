@@ -53,10 +53,6 @@ class App extends React.Component {
                         <Route path='/signup' component={SignUp} />
                         <Route path='/profile/:userName' exact component={Profile} />
                         <Route path='/profile/:userName/edit' component={ProfileEdit} />
-                        {/* 
-                            ↑ 「React Router v4 でルーティング先の component に Props を渡す方法」参照
-                            https://ngzm.hateblo.jp/entry/2017/06/23/001352 
-                        */}
                     </div>
                     <ErrorHandler />
                 </Router>

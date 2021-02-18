@@ -13,14 +13,14 @@ class Header extends React.Component {
         if(this.props.isSignedIn){
             return (
                 <div className="ui menu">
-                    <Link to="/" className="header item">Isotter - Home</Link>
-                    <Link to="/post" className="item">Post</Link>
+                    <Link to="/" className="header item">Isotter - ホーム</Link>
+                    <Link to="/post" className="item">投稿</Link>
                     <Link 
                         to={`/profile/${this.props.userName}`} 
                         onClick={this.onProfileButtonClick} 
                         className="item"
                     >
-                        {this.props.userName} - Profile
+                        {this.props.userName} - プロフィール
                     </Link>
                     <Link 
                         to="/" 
@@ -34,9 +34,9 @@ class Header extends React.Component {
         } else {
             return (
                 <div className="ui menu">
-                    <Link to="/" className="header item">Isotter - Home</Link>
-                    <Link to="/signup" className="item">Sign Up</Link> 
-                    <Link to="/login" className="item right">Log In</Link>
+                    <Link to="/" className="header item">Isotter - ホーム</Link>
+                    <Link to="/signup" className="item">サインアップ</Link> 
+                    <Link to="/login" className="item right">ログイン</Link>
                 </div>
             )
         }

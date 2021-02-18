@@ -83,7 +83,7 @@ class ProfileEdit extends React.Component {
             >
                 <div className="ui medium header">{this.props.match.params.userName} さんのプロフィールを更新</div>
                 <Field 
-                    label="ユーザーネーム *" 
+                    label="ユーザー名 *" 
                     name ="userName"
                     component = {this.renderInput}
                     placeholder = "namename"
