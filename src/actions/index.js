@@ -100,9 +100,6 @@ export const getUserData =(userName) => async dispatch => {
 
 export const modUserData = (userData, token) => async dispatch => {
     let newUserData;
-    const config = {
-        headers: { 'Authorization': 'Bearer ' + token }
-    };
 
     // file(画像等)を含む場合は、JSONではなくフォーム形式で送る必要がある
     const formData = new FormData();
