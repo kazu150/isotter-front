@@ -53,7 +53,8 @@ class LogIn extends React.Component {
                     new Date().getTime() + remainingMilliseconds
                 );
                 localStorage.setItem('expiryDate', expiryDate.toISOString())
-                this.setAutoLogout(remainingMilliseconds);
+                this.props.setAutoLogout(remainingMilliseconds);
+
             })
             .catch(err => {
                 console.log(err)

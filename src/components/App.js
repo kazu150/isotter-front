@@ -33,11 +33,6 @@ class App extends React.Component {
         this.props.showAllTweets();
     }
 
-    setAutoLogout = milliseconds => {
-        setTimeout(() => {
-            this.props.signOut();
-        }, milliseconds);
-    };
 
     render(){
         return (
@@ -48,6 +43,10 @@ class App extends React.Component {
                         <Route path='/' exact component={Timeline} /> 
                         <Route path='/post' component={PostEdit} />
                         <Route path='/login' component={LogIn} />
+                        <Route
+                            path='/login'
+                            render={props => <LogIn setAutoLogout={this.setAutoLogout} {...props} />}
+                        />
                         <Route path='/forgot-password' component={ForgotPassword} />
                         <Route path='/reset-password/:token' component={ResetPassword} />
                         <Route path='/signup' component={SignUp} />
