@@ -6,38 +6,37 @@ import history from '../history';
 
 class ProfileEdit extends React.Component {
 
-    // constructor(props){
-    //     super(props);
-    //     this.fileInput = React.createRef();
-    // }
-
+    // Updateのときの処理
     onSubmit = async ( formValues ) => {
         const token = localStorage.getItem('token');
 
+        // Actionに渡して、エラーがなければlocalstorageを上書き、profileページへ遷移
         this.props.modUserData(formValues, token)
             .then(resData => {
                 localStorage.setItem('userId', resData._id);
                 localStorage.setItem('userName', resData.userName);
                 history.push(`/profile/${resData.userName}`);
             })
-            .catch(err => {})
+            .catch(err => {
+                console.log(err);
+            })
     }
     
+    // 通常のInputをレンダー
     renderInput = ({ input, label, placeholder, type }) => {
         return(
             <div className ="field">
                 <label>{label}</label>
                 <input
-                    // もとはinputプロパティ全体をサーバに投げてたが、コメントアウトしていいのか
                     {...input}
                     type = {type}
                     placeholder = {placeholder}
-                    // ref = {this.fileInput}
                 />
             </div>
         );
     }
 
+    // ファイルアップロードを伴う項目（プロフ画像）のInputをレンダー
     renderFileUpload = (props) => {
         const { input, label } = props
         const onInputChange = (e) => {

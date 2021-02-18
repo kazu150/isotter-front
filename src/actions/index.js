@@ -101,7 +101,7 @@ export const getUserData =(userName) => async dispatch => {
 export const modUserData = (userData, token) => async dispatch => {
     let newUserData;
 
-    // file(画像等)を含む場合は、JSONではなくフォーム形式で送る必要がある
+    // file(今回はプロフ画像)を含む場合があるため、JSONではなくフォーム形式で送る
     const formData = new FormData();
     formData.append('_id', userData._id)    
     if(userData.email){
@@ -126,7 +126,7 @@ export const modUserData = (userData, token) => async dispatch => {
 
     try {
         const response = await fetch(
-            'http://localhost:8080/admin/userStatus',
+            `${env.API_ORIGIN}admin/userStatus`,
             {
                 method: 'PATCH',
                 headers: { 'Authorization': 'Bearer ' + token },
@@ -134,14 +134,24 @@ export const modUserData = (userData, token) => async dispatch => {
             }
         )
 
-        console.log(response);
-        newUserData = response.data.user;
+        // fetchメソッドはjsonで返ってくる
+        // https://shimablogs.com/fetch-api-axios-difference
+        const data = await response.json()
+        
+        // responseが200番台でない場合、response.okがfalseとなる
+        if(!response.ok) throw new Error()
+        newUserData = data.user;
     } catch(error) {
         dispatch({ type: SET_ERROR, payload: error });
     }
-    
+
+    // selectedUserReducerの内容を最新状態に更新
     dispatch({ type: FETCH_USER_DATA, payload: newUserData });
+
+    // authReducerの内容を最新状態に更新
     dispatch({ type: MOD_USER, payload: newUserData });
+
+    // 最新のuserDataを返す
     return newUserData;
 }
 
