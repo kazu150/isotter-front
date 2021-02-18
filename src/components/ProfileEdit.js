@@ -81,7 +81,7 @@ class ProfileEdit extends React.Component {
                 className='ui form success'
                 onSubmit={this.props.handleSubmit(this.onSubmit)} 
             >
-                <div className="ui medium header">Edit Profile of "{this.props.match.params.userName}"</div>
+                <div className="ui medium header">{this.props.match.params.userName} さんのプロフィールを更新</div>
                 <Field 
                     label="ユーザーネーム *" 
                     name ="userName"
@@ -119,7 +119,7 @@ class ProfileEdit extends React.Component {
                     component = {this.renderInput}
                     placeholder="Orange" 
                 />
-                <button type="submit" className='ui submit button red'>Update</button>
+                <button type="submit" className='ui submit button red'>更新</button>
             </form>
         );
 
