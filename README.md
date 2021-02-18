@@ -3,6 +3,10 @@
 React, Redux, Node.js, Mongo.dbの学習用として作成しました。  
 アプリURL： https://isotter.netlify.app/
 
+## デモ（ゲストログイン）
+ID: guest
+Pass: 111111
+
 ## ツイッター風SNSアプリ
 アプリは、こちらのクライアントサイドリポジトリと、  
 サーバーサイドのリポジトリ（https://github.com/kazu150/isotter-back ）にて構成。  
