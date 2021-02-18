@@ -1,7 +1,7 @@
 import React from 'react';
 import { Field, reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
-import { modUserData } from '../actions';
+import { modUserData, setError } from '../actions';
 import history from '../history';
 
 class ProfileEdit extends React.Component {
@@ -9,6 +9,26 @@ class ProfileEdit extends React.Component {
     // Updateのときの処理
     onSubmit = async ( formValues ) => {
         const token = localStorage.getItem('token');
+
+        // ユーザー名、Eメールは該当項目の修正有無に関わらず、入力されている状態がmust
+
+        // ユーザー名は入力されており、５文字以上か
+        if(!formValues.userName || formValues.userName.length < 5) {
+            this.props.setError({
+                status: 403,
+                errorMessage: 'ユーザー名を5文字以上で入力してください'
+            })
+            return;
+        }
+
+        // Eメールは入力されているか
+        if(!formValues.email) {
+            this.props.setError({
+                status: 403,
+                errorMessage: 'Eメールを入力してください'
+            })
+            return;
+        }
 
         // Actionに渡して、エラーがなければlocalstorageを上書き、profileページへ遷移
         this.props.modUserData(formValues, token)
@@ -128,5 +148,5 @@ const formWrapped = reduxForm({
 
 export default connect(
     mapStateToProps,
-    { modUserData }
+    { modUserData, setError }
 )(formWrapped);

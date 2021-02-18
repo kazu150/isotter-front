@@ -31,7 +31,7 @@ export  const signIn = (userName, password) => async dispatch => {
         })
 
     } catch(error) {
-        dispatch({ type: SET_ERROR, payload: error });
+        dispatch({ type: SET_ERROR, payload: error.response });
     }
 
     dispatch({ type: SIGN_IN, payload: response.data });
@@ -66,7 +66,7 @@ export const signUp = ( formValues ) => async dispatch => {
         history.push('/login');
         
     } catch (error) {
-        dispatch({ type: SET_ERROR, payload: error });
+        dispatch({ type: SET_ERROR, payload: error.response });
     }
 
 
@@ -91,7 +91,7 @@ export const getUserData =(userName) => async dispatch => {
         userData.thumb = env.API_ORIGIN + userData.thumb;
 
     } catch (error) {
-        dispatch({ type: SET_ERROR, payload: error });
+        dispatch({ type: SET_ERROR, payload: error.response });
     }
 
     dispatch({ type: FETCH_USER_DATA, payload: userData });
@@ -133,7 +133,7 @@ export const modUserData = (userData, token) => async dispatch => {
                 body: formData
             }
         )
-
+        
         // fetchメソッドはjsonで返ってくる
         // https://shimablogs.com/fetch-api-axios-difference
         const data = await response.json()
@@ -142,6 +142,7 @@ export const modUserData = (userData, token) => async dispatch => {
         if(!response.ok) throw new Error()
         newUserData = data.user;
     } catch(error) {
+        console.log(error)
         dispatch({ type: SET_ERROR, payload: error });
     }
 
@@ -176,7 +177,7 @@ export const showAllTweets = () => async dispatch => {
         })
 
     } catch(error) {
-        dispatch({ type: SET_ERROR, payload: error });
+        dispatch({ type: SET_ERROR, payload: error.response });
     }
 
     dispatch({ type: SHOW_ALL_TWEETS, payload: tweets });
@@ -200,7 +201,7 @@ export const tweet = (formValues, userId, token) => async dispatch => {
         history.push('/');
 
     } catch (error) {
-        dispatch({ type: SET_ERROR, payload: error });
+        dispatch({ type: SET_ERROR, payload: error.response });
 
     }
 
@@ -228,7 +229,7 @@ export const deletePost = (postId, token) => async dispatch => {
         return;
 
     }catch(error){
-        dispatch({ type: SET_ERROR, payload: error });
+        dispatch({ type: SET_ERROR, payload: error.response });
     }
 }
 
@@ -252,7 +253,7 @@ export const sendPasswordResetRequest = (email) => async dispatch => {
         });
 
     } catch (error) {
-        dispatch({ type: SET_ERROR, payload: error });
+        dispatch({ type: SET_ERROR, payload: error.response });
     }
 }
 
@@ -286,11 +287,15 @@ export const resetPassword = (password, passwordConfirm, token) => async dispatc
         history.push('/login');
 
     } catch(error){
-        dispatch({ type: SET_ERROR, payload: error });
+        dispatch({ type: SET_ERROR, payload: error.response });
     }
 };
 
 // Error
+
+export const setError = (error) => {
+    return { type: SET_ERROR, payload: error };
+};
 
 export const unsetError = () => {
     return { type: UNSET_ERROR };

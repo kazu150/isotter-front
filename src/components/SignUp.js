@@ -1,7 +1,7 @@
 import React from 'react';
 import { Field, reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
-import { signUp } from '../actions';
+import { signUp, setError } from '../actions';
 
 class SignUp extends React.Component {
 
@@ -12,55 +12,6 @@ class SignUp extends React.Component {
         confirmPassword: '',
         err: ''
     }
-
-    // addNewUser = async (userName, email, password, confirmPassword) => {
-        // try{
-        //     const method = 'PUT';
-        //     if(password !== confirmPassword){
-        //         const error = new Error('パスワードが違います') 
-        //         error.status = 422;
-        //         throw error;
-        //     }
-            
-        //     const res = await fetch(env.API_ORIGIN + 'admin/signup', {
-        //         method: method,
-        //         headers: {
-        //             'Content-Type': 'application/json'
-        //         },
-        //         body: JSON.stringify({
-        //             userName: userName,
-        //             email: email,
-        //             password: password,
-        //             confirmPassword: confirmPassword,
-        //             thumb: 'http://ipu-corp.com/wp-content/uploads/sites/17/2017/09/human-icon-big.png',
-        //         })
-        //     })
-
-        //     // 不明箇所ID:[0001]ここで本来、サーバサイドから引き継いだエラーメッセージを表示したい
-        //     if(res.status === 403){
-        //         const error = new Error('すでにそのユーザーネームは使われています') 
-        //         error.status = res.status;
-        //         throw error;
-        //     }else if(res.status!== 200 && res.status !== 201){
-        //         const error = new Error('サーバー側のなにかのエラー') 
-        //         error.status = res.status;
-        //         throw error;
-        //     }
-        //     history.push('/login');
-        //     this.setState({
-        //         result:'ユーザ登録完了'
-        //     })
-
-        // }catch(err){
-        //     this.setState({
-        //         err: {
-        //             status: err.status,
-        //             message: err.message
-        //         }
-        //     })
-        // }
-
-    // }
 
     renderInput = ({ input, label, placeholder, type }) => {
         return(
@@ -76,7 +27,52 @@ class SignUp extends React.Component {
     }
     
     onSubmit = (formValues) => {
+        
+        // サインイン済みかどうか
+        if(this.props.isSignedIn){
+            this.props.setError({
+                status: 403,
+                errorMessage: 'すでにサインインしています'
+            })
+            return;
+        }
 
+        // ユーザー名は入力されているか
+        if(!formValues.userName || formValues.userName.length < 5) {
+            this.props.setError({
+                status: 403,
+                errorMessage: 'ユーザー名を5文字以上で入力してください'
+            })
+            return;
+        }
+
+        // Eメールは入力されているか
+        if(!formValues.email) {
+            this.props.setError({
+                status: 403,
+                errorMessage: 'Eメールを入力してください'
+            })
+            return;
+        }
+
+        // パスワードは入力されているか
+        if(!formValues.password || formValues.password.length < 6) {
+            this.props.setError({
+                status: 403,
+                errorMessage: 'パスワードを6文字以上で入力してください'
+            })
+            return;
+        }
+        
+        // パスワードは入力されているか
+        if(formValues.passwordConfirm !== formValues.password) {
+            this.props.setError({
+                status: 403,
+                errorMessage: 'パスワードが一致しません'
+            })
+            return;
+        }
+        
         this.props.signUp(formValues);
 
     }
@@ -100,7 +96,7 @@ class SignUp extends React.Component {
                 onSubmit={this.props.handleSubmit(this.onSubmit)} 
                 className='ui form success'
             >
-                <div className="ui medium header">SignUp</div>
+                <div className="ui medium header">サインアップ</div>
                 <Field 
                     name="userName"
                     label="ユーザーネーム（５文字以上）【必須】"
@@ -128,9 +124,15 @@ class SignUp extends React.Component {
                     component={this.renderInput}
                 />
                 {this.renderErrorMessage()}
-                <button className='ui submit button' type="submit">Submit</button>
+                <button className='ui submit button' type="submit">送信</button>
             </form>
         )
+    }
+}
+
+const mapStateToProps = state => {
+    return {
+        isSignedIn: state.auth.isSignedIn
     }
 }
 
@@ -139,6 +141,6 @@ const formWrapped = reduxForm({
 })(SignUp)
 
 export default connect(
-    null,
-    { signUp }
+    mapStateToProps,
+    { signUp, setError }
 )(formWrapped);
