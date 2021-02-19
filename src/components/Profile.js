@@ -18,7 +18,7 @@ class Profile extends React.Component {
                     onClick={() => history.push(`/profile/${loginUser}/edit`)} 
                     className='ui submit button'
                 >
-                    Edit
+                    プロフィール編集
                 </button>
             ) 
         }
@@ -28,17 +28,17 @@ class Profile extends React.Component {
         return (
             <div className="ui list">
                 <div className="item">
-                    <div className="header">UserName</div>
+                    <div className="header">ユーザー名</div>
                     {this.props.selectedUser.userName}
                 </div>
                 <br/>
                 <div className="item">
-                    <div className="header">E-mail</div>
+                    <div className="header">メールアドレス</div>
                     {this.props.selectedUser.email}
                 </div>
                 <br/>
                 <div className="item">
-                    <div className="header">Thumbnail</div>
+                    <div className="header">サムネイル</div>
                     <img 
                         src={this.props.selectedUser.thumb} 
                         alt={this.props.selectedUser.thumb}  
@@ -47,7 +47,7 @@ class Profile extends React.Component {
                 </div>
                 <br/>
                 <div className="item">
-                    <div className="header">Favorite Fruit</div>
+                    <div className="header">好きなフルーツ</div>
                     {this.props.selectedUser.fruit || 'none'}
                 </div>
                 <br/>

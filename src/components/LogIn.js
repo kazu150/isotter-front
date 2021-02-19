@@ -53,7 +53,8 @@ class LogIn extends React.Component {
                     new Date().getTime() + remainingMilliseconds
                 );
                 localStorage.setItem('expiryDate', expiryDate.toISOString())
-                this.setAutoLogout(remainingMilliseconds);
+                this.props.setAutoLogout(remainingMilliseconds);
+
             })
             .catch(err => {
                 console.log(err)
@@ -68,6 +69,7 @@ class LogIn extends React.Component {
                     { ...input }
                     type={type} 
                     placeholder={placeholder} 
+                    autoComplete="off"
                 />
             </div>
         );
@@ -97,7 +99,10 @@ class LogIn extends React.Component {
                     送信
                 </button>
                 <button 
-                    onClick={() => history.push('/forgot-password')} 
+                    onClick={(e) => {
+                        e.preventDefault();
+                        history.push('/forgot-password')
+                    }} 
                     style={{ marginLeft: '15px' }}
                     className="ui submit button"
                 >

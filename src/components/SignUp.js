@@ -20,6 +20,7 @@ class SignUp extends React.Component {
                 <input 
                     { ...input }
                     type={type} 
+                    autoComplete="off"
                     placeholder={placeholder} 
                 />
             </div>
@@ -112,6 +113,7 @@ class SignUp extends React.Component {
                 <Field 
                     name="password"
                     type="password"
+                    autoComplete="off"
                     label="パスワード（６文字以上）【必須】"
                     placeholder="●●●●●●"
                     component={this.renderInput}
@@ -119,6 +121,7 @@ class SignUp extends React.Component {
                 <Field 
                     name="passwordConfirm"
                     type="password"
+                    autoComplete="off"
                     label="パスワード（確認）"
                     placeholder="●●●●●●"
                     component={this.renderInput}

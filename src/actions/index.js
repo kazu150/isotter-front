@@ -120,9 +120,6 @@ export const modUserData = (userData, token) => async dispatch => {
     if(userData.userName){
         formData.append('userName', userData.userName)
     }
-    for(let item of formData){
-        console.log(item);
-    }
 
     try {
         const response = await fetch(
@@ -137,13 +134,22 @@ export const modUserData = (userData, token) => async dispatch => {
         // fetchメソッドはjsonで返ってくる
         // https://shimablogs.com/fetch-api-axios-difference
         const data = await response.json()
-        
+
         // responseが200番台でない場合、response.okがfalseとなる
-        if(!response.ok) throw new Error()
+        if(!response.ok) {
+            // ここだけfetchメソッドなので、axiosのエラー形式と揃うように一旦文字列で投げ、整形
+            throw new Error(`${response.status},${data.errorMessage}`)
+        }
         newUserData = data.user;
     } catch(error) {
-        console.log(error)
-        dispatch({ type: SET_ERROR, payload: error });
+        const splittedError = error.message.split(',');
+        const formattedError = {
+            status: splittedError[0],
+            errorMessage: splittedError[1]
+        }
+
+        dispatch({ type: SET_ERROR, payload: formattedError});
+        return;
     }
 
     // selectedUserReducerの内容を最新状態に更新
